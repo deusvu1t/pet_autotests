@@ -1,0 +1,45 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_requests:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip Install -r requirements.txt
+
+      - name: Install Playwright browsers
+        run: playwright install ${{matrix.browser}} --with-deps
+
+      - name: Run Tests
+        run: pytest --browser ${{matrix.browser}}
+        env:
+          BASE_URL: ${{secrets.BASE_URL}}
+
+      - name: Upload test artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{matrix.browser}}
+          path: test-results/
+          retention-days: 7
