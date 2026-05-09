@@ -15,6 +15,7 @@ def test_search_returns_matching_products(page: Page):
 
 @pytest.mark.ui
 def test_search_no_results(page):
+    # test
     home_page = HomePage(page).open()
 
     home_page.search("123")
