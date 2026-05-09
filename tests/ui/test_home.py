@@ -18,14 +18,14 @@ def test_home_opens(page: Page):
 
 @pytest.mark.ui
 def test_home_search_visible(page: Page):
-    home = HomePage(page).open()
+    home_page = HomePage(page).open()
 
-    expect(home.search_input).to_be_visible()
-    expect(home.search_submit).to_be_visible()
+    expect(home_page.search_input).to_be_visible()
+    expect(home_page.search_submit).to_be_visible()
 
 
 @pytest.mark.ui
 def test_home_products_loaded(page: Page):
-    home = HomePage(page).open()
+    home_page = HomePage(page).open()
 
-    expect(home.product_cards).not_to_have_count(0)
+    expect(home_page.product_cards).not_to_have_count(0)
