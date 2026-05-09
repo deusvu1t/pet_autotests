@@ -1,5 +1,3 @@
-from urllib.parse import urljoin
-
 from playwright.sync_api import Page
 
 from utils.config import BASE_URL
@@ -12,5 +10,11 @@ class BasePage:
         self.page = page
 
     def open(self):
-        self.page.goto(urljoin(BASE_URL, self.PATH))
+        if not BASE_URL:
+            raise ValueError("BASE_URL is not set")
+
+        url = f"{BASE_URL.rstrip('/')}{self.PATH}"
+
+        self.page.goto(url)
+
         return self
