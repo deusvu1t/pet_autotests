@@ -1,6 +1,7 @@
 from playwright.sync_api import Locator, Page
 
 from pages.base_page import BasePage
+from pages.components.product_card import ProductCard
 
 
 class HomePage(BasePage):
@@ -19,25 +20,33 @@ class HomePage(BasePage):
 
     @property
     def product_cards(self) -> Locator:
-        return self.page.locator('[data-test^="product-"]')
+        return self.page.locator("a[data-test^='product-']")
 
-    def search(self, text: str):
+    def search(self, text: str) -> None:
         self.search_input.fill(text)
         self.search_submit.click()
 
-    def get_card_by_name(self, name: str) -> Locator:
-        return self.product_cards.filter(
-            has=self.page.get_by_test_id("product-name").get_by_text(
-                name,
-                exact=True,
+    def cards(self) -> list[ProductCard]:
+        self.product_cards.first.wait_for()
+        return [ProductCard(card) for card in self.product_cards.all()]
+
+    def card_at(self, index: int) -> ProductCard:
+        self.product_cards.first.wait_for()
+        return ProductCard(self.product_cards.nth(index))
+
+    def get_card_by_name(self, name: str) -> ProductCard:
+        self.product_cards.first.wait_for()
+        return ProductCard(
+            self.product_cards.filter(
+                has=self.page.get_by_test_id("product-name").get_by_text(
+                    name,
+                    exact=True,
+                )
             )
         )
-
-    def open_product(self, name: str):
-        self.get_card_by_name(name).click()
 
     def category_checkbox(self, name: str) -> Locator:
         return self.page.get_by_role("checkbox", name=name)
 
-    def filter_by_category(self, name: str):
+    def filter_by_category(self, name: str) -> None:
         self.category_checkbox(name).check()

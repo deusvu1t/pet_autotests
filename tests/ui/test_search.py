@@ -10,12 +10,13 @@ def test_search_returns_matching_products(page: Page):
 
     home_page.search("pliers")
 
-    expect(home_page.product_cards.filter(has_text="Pliers")).not_to_have_count(0)
+    pliers_card = home_page.get_card_by_name("Pliers")
+
+    expect(pliers_card.name).to_have_text("Pliers")
 
 
 @pytest.mark.ui
 def test_search_no_results(page):
-    # test
     home_page = HomePage(page).open()
 
     home_page.search("123")

@@ -1,7 +1,10 @@
+import re
+
 import pytest
 from playwright.sync_api import Page, expect
 
 from pages.home_page import HomePage
+from pages.product_page import ProductPage
 
 
 @pytest.mark.ui
@@ -15,8 +18,10 @@ def test_filter_by_hand_tools(page: Page):
 
 @pytest.mark.ui
 def test_open_product_card(page: Page):
-    home_page = HomePage(page).open()
+    HomePage(page).open().get_card_by_name("Pliers").open()
 
-    home_page.open_product("Hammer")
+    product_page = ProductPage(page)
 
-    expect(page.get_by_role("heading", level=1)).to_have_text("Hammer")
+    expect(page).to_have_url(re.compile("product/"))
+
+    expect(product_page.name).to_have_text("Pliers")
