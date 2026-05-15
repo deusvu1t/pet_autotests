@@ -1,6 +1,7 @@
 from playwright.sync_api import Page
 
 from pages.components.header import Header
+from pages.components.pagination import Pagination
 from utils.config import BASE_URL
 
 
@@ -10,6 +11,7 @@ class BasePage:
     def __init__(self, page: Page):
         self.page = page
         self.header = Header(page)
+        self.pagination = Pagination(page)
 
     def open(self):
         if not BASE_URL:

@@ -1,4 +1,4 @@
-from playwright.sync_api import Locator, Page
+from playwright.sync_api import Locator, Page, expect
 
 from pages.base_page import BasePage
 from pages.components.product_card import ProductCard
@@ -21,6 +21,10 @@ class HomePage(BasePage):
     @property
     def product_cards(self) -> Locator:
         return self.page.locator("a[data-test^='product-']")
+
+    @property
+    def sort_dropdown(self) -> Locator:
+        return self.page.get_by_test_id("sort")
 
     def search(self, text: str) -> None:
         self.search_input.fill(text)
@@ -45,8 +49,29 @@ class HomePage(BasePage):
             )
         )
 
+    def get_card_by_price(self, price: str) -> ProductCard:
+        self.product_cards.first.wait_for()
+        return ProductCard(
+            self.page.locator(
+                f"//span[@data-test='product-price' and normalize-space(text())='{price}']"
+                "/ancestor::a[starts-with(@data-test,'product-')]"
+            ).first
+        )
+
     def category_checkbox(self, name: str) -> Locator:
         return self.page.get_by_role("checkbox", name=name)
 
     def filter_by_category(self, name: str) -> None:
         self.category_checkbox(name).check()
+
+    def sort_by(self, option: str) -> None:
+        first_card = self.product_cards.first
+
+        old_text = first_card.text_content()
+
+        if old_text is None:
+            raise ValueError("Card text not found")
+
+        self.sort_dropdown.select_option(label=option)
+
+        expect(first_card).not_to_have_text(old_text)

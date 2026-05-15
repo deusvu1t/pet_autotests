@@ -16,7 +16,7 @@ def test_search_returns_matching_products(page: Page):
 
 
 @pytest.mark.ui
-def test_search_no_results(page):
+def test_search_no_results(page: Page):
     home_page = HomePage(page).open()
 
     home_page.search("123")
@@ -26,7 +26,7 @@ def test_search_no_results(page):
 
 
 @pytest.mark.ui
-def test_search_via_placeholder(page):
+def test_search_via_placeholder(page: Page):
     HomePage(page).open()
 
     expect(page.get_by_placeholder("Search")).to_be_enabled()
