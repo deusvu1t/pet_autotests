@@ -1,4 +1,4 @@
-from playwright.sync_api import Locator, Page, expect
+from playwright.sync_api import Locator, expect
 
 from pages.base_page import BasePage
 from pages.components.product_card import ProductCard
@@ -6,9 +6,6 @@ from pages.components.product_card import ProductCard
 
 class HomePage(BasePage):
     PATH = "/"
-
-    def __init__(self, page: Page):
-        super().__init__(page)
 
     @property
     def search_input(self) -> Locator:
@@ -61,8 +58,15 @@ class HomePage(BasePage):
     def category_checkbox(self, name: str) -> Locator:
         return self.page.get_by_role("checkbox", name=name)
 
-    def filter_by_category(self, name: str) -> None:
-        self.category_checkbox(name).check()
+    def select_categories(self, names: list[str]) -> None:
+        for name in names:
+            self.category_checkbox(name).check()
+
+    def clear_filters(self) -> None:
+        checkboxes = self.page.get_by_role("checkbox").all()
+        for checkbox in checkboxes:
+            if checkbox.is_checked():
+                checkbox.uncheck()
 
     def sort_by(self, option: str) -> None:
         first_card = self.product_cards.first

@@ -11,7 +11,7 @@ from pages.product_page import ProductPage
 def test_filter_by_hand_tools(page: Page):
     home_page = HomePage(page).open()
 
-    home_page.filter_by_category("hand tools")
+    home_page.select_categories(["hand tools"])
 
     expect(home_page.category_checkbox("hand tools")).to_be_checked()
 

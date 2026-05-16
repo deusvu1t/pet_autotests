@@ -4,7 +4,7 @@ import pytest
 from playwright.sync_api import Page, expect
 
 from pages.login_page import LoginPage
-from utils.test_data import INVALID_USER, VALID_USER
+from utils.test_data import INVALID_LOGIN_USER, VALID_LOGIN_USER
 
 
 @pytest.mark.smoke
@@ -12,7 +12,7 @@ from utils.test_data import INVALID_USER, VALID_USER
 def test_login_with_valid_credentials(page: Page):
     login_page = LoginPage(page).open()
 
-    login_page.login(VALID_USER["email"], VALID_USER["password"])
+    login_page.login(VALID_LOGIN_USER["email"], VALID_LOGIN_USER["password"])
 
     expect(page).to_have_url(re.compile("/account"))
 
@@ -21,7 +21,7 @@ def test_login_with_valid_credentials(page: Page):
 def test_login_with_invalid_credentials(page: Page):
     login_page = LoginPage(page).open()
 
-    login_page.login(INVALID_USER["email"], INVALID_USER["password"])
+    login_page.login(INVALID_LOGIN_USER["email"], INVALID_LOGIN_USER["password"])
 
     expect(page.get_by_text("Invalid email or password")).to_be_visible()
 
