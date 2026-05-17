@@ -18,6 +18,7 @@ class UserMenu:
         return self.page.get_by_test_id("nav-my-account")
 
     def open(self) -> None:
+        expect(self.trigger).to_be_visible()
         self.trigger.click()
         expect(self.sign_out_button).to_be_visible()
 
