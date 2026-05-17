@@ -25,3 +25,7 @@ class LoginPage(BasePage):
         self.email_input.fill(email)
         self.password_input.fill(password)
         self.login_button.click()
+
+    def login_successfully(self, email: str, password: str) -> None:
+        self.login(email, password)
+        self.page.wait_for_url("**/account", timeout=30_000)
