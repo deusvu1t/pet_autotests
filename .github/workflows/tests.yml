@@ -33,7 +33,7 @@ jobs:
         run: playwright install chrome --with-deps
 
       - name: Run tests
-        run: pytest --browser ${{ matrix.browser }} --screenshot=only-on-failure --output=test-results
+        run: pytest --browser ${{ matrix.browser }}
         env:
           BASE_URL: ${{ secrets.BASE_URL }}
 
