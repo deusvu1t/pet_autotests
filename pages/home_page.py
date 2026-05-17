@@ -1,4 +1,4 @@
-from playwright.sync_api import Locator
+from playwright.sync_api import Locator, expect
 
 from pages.base_page import BasePage
 from pages.components.product_card import ProductCard
@@ -7,6 +7,11 @@ from utils.parsers import parse_price
 
 class HomePage(BasePage):
     PATH = "/"
+
+    def open(self) -> "HomePage":
+        super().open()
+        self.product_cards.first.wait_for()
+        return self
 
     @property
     def search_input(self) -> Locator:
@@ -89,5 +94,6 @@ class HomePage(BasePage):
                 checkbox.uncheck()
 
     def sort_by(self, option: str) -> None:
+        old_first = self.product_names_list.first.inner_text()
         self.sort_dropdown.select_option(label=option)
-        self.page.wait_for_load_state("networkidle")
+        expect(self.product_names_list.first).not_to_have_text(old_first)
