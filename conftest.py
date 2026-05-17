@@ -28,9 +28,10 @@ def browser_context_args(browser_context_args):
 @pytest.fixture(scope="session")
 def browser_type_launch_args():
     return {
+        "channel": "chrome",
         "args": [
             "--disable-blink-features=AutomationControlled",
             "--no-sandbox",
             "--disable-dev-shm-usage",
-        ]
+        ],
     }

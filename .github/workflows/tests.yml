@@ -30,7 +30,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Install Playwright browsers
-        run: playwright install ${{ matrix.browser }} --with-deps
+        run: playwright install chrome --with-deps
 
       - name: Run tests
         run: pytest --browser ${{ matrix.browser }} --screenshot=only-on-failure --output=test-results
