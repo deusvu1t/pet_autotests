@@ -46,6 +46,7 @@ class HomePage(BasePage):
     def search(self, text: str) -> None:
         self.search_input.fill(text)
         self.search_submit.click()
+        self.page.wait_for_load_state("networkidle")
 
     def cards(self) -> list[ProductCard]:
         self.product_cards.first.wait_for()
