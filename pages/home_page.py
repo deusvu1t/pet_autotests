@@ -90,3 +90,4 @@ class HomePage(BasePage):
 
     def sort_by(self, option: str) -> None:
         self.sort_dropdown.select_option(label=option)
+        self.page.wait_for_load_state("networkidle")

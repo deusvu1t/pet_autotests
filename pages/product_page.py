@@ -1,4 +1,4 @@
-from playwright.sync_api import Locator, Page
+from playwright.sync_api import Locator, Page, expect
 
 from pages.base_page import BasePage
 
@@ -30,3 +30,4 @@ class ProductPage(BasePage):
     def add_to_cart(self, quantity: int = 1) -> None:
         self.quantity_input.fill(str(quantity))
         self.add_to_cart_button.click()
+        expect(self.header.cart_quantity).to_be_visible()
