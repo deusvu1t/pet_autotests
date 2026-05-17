@@ -5,6 +5,7 @@ from playwright.sync_api import Page, expect
 
 from pages.home_page import HomePage
 from pages.login_page import LoginPage
+from utils.config import BASE_URL
 from utils.test_data import VALID_LOGIN_USER
 
 
@@ -12,20 +13,21 @@ from utils.test_data import VALID_LOGIN_USER
 @pytest.mark.ui
 def test_user_menu_opens_after_login(page: Page):
     LoginPage(page).open().login_successfully(VALID_LOGIN_USER["email"], VALID_LOGIN_USER["password"])
-    home_page = HomePage(page).open()
+    page.goto(BASE_URL)
+    header = HomePage(page).header
 
-    home_page.header.user_menu.open()
+    header.user_menu.open()
 
-    expect(home_page.header.user_menu.my_account_link).to_be_visible()
-    expect(home_page.header.user_menu.sign_out_button).to_be_visible()
+    expect(header.user_menu.my_account_link).to_be_visible()
+    expect(header.user_menu.sign_out_button).to_be_visible()
 
 
 @pytest.mark.ui
 def test_sign_out_via_user_menu(page: Page):
     LoginPage(page).open().login_successfully(VALID_LOGIN_USER["email"], VALID_LOGIN_USER["password"])
-    home_page = HomePage(page).open()
+    page.goto(BASE_URL)
 
-    home_page.header.user_menu.sign_out()
+    HomePage(page).header.user_menu.sign_out()
 
     expect(page).to_have_url(re.compile(".*auth/login"))
 
