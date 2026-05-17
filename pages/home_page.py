@@ -35,13 +35,13 @@ class HomePage(BasePage):
     def sort_options(self) -> list[str]:
         options = self.sort_dropdown.locator("option")
         options.first.wait_for(state="attached")
-        return [o.strip() for o in options.all_text_contents()]
+        return options.all_inner_texts()
 
     def get_prices(self) -> list[float]:
-        return [parse_price(p) for p in self.product_prices.all_text_contents()]
+        return [parse_price(p) for p in self.product_prices.all_inner_texts()]
 
     def get_names(self) -> list[str]:
-        return [n.strip() for n in self.product_names_list.all_text_contents()]
+        return self.product_names_list.all_inner_texts()
 
     def search(self, text: str) -> None:
         self.search_input.fill(text)

@@ -44,7 +44,7 @@ class ContactPage(BasePage):
     def subject_options(self) -> list[str]:
         options = self.subject_dropdown.locator("option")
         options.nth(1).wait_for(state="attached")
-        return [o.strip() for o in options.all_text_contents()]
+        return options.all_inner_texts()
 
     def submit_contact_form(self, data: dict, attachment: str | None = None) -> None:
         self.first_name_input.fill(data["first_name"])

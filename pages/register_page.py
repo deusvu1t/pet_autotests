@@ -64,7 +64,7 @@ class RegisterPage(BasePage):
     def country_options(self) -> list[str]:
         options = self.country_dropdown.locator("option")
         options.nth(1).wait_for(state="attached")
-        return [o.strip() for o in options.all_text_contents()]
+        return options.all_inner_texts()
 
     def register(self, data: dict) -> None:
         self.first_name_input.fill(data["first_name"])
