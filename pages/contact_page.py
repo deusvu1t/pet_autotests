@@ -41,6 +41,11 @@ class ContactPage(BasePage):
     def error_for(self, field: str) -> Locator:
         return self.page.get_by_test_id(f"{field}-error")
 
+    def subject_options(self) -> list[str]:
+        options = self.subject_dropdown.locator("option")
+        options.nth(1).wait_for(state="attached")
+        return [o.strip() for o in options.all_text_contents()]
+
     def submit_contact_form(self, data: dict, attachment: str | None = None) -> None:
         self.first_name_input.fill(data["first_name"])
         self.last_name_input.fill(data["last_name"])

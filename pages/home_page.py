@@ -1,7 +1,8 @@
-from playwright.sync_api import Locator, expect
+from playwright.sync_api import Locator
 
 from pages.base_page import BasePage
 from pages.components.product_card import ProductCard
+from utils.parsers import parse_price
 
 
 class HomePage(BasePage):
@@ -20,8 +21,27 @@ class HomePage(BasePage):
         return self.page.locator("a[data-test^='product-']")
 
     @property
+    def product_names_list(self) -> Locator:
+        return self.page.locator("[data-test='product-name']")
+
+    @property
+    def product_prices(self) -> Locator:
+        return self.page.locator("[data-test='product-price']")
+
+    @property
     def sort_dropdown(self) -> Locator:
         return self.page.get_by_test_id("sort")
+
+    def sort_options(self) -> list[str]:
+        options = self.sort_dropdown.locator("option")
+        options.first.wait_for(state="attached")
+        return [o.strip() for o in options.all_text_contents()]
+
+    def get_prices(self) -> list[float]:
+        return [parse_price(p) for p in self.product_prices.all_text_contents()]
+
+    def get_names(self) -> list[str]:
+        return [n.strip() for n in self.product_names_list.all_text_contents()]
 
     def search(self, text: str) -> None:
         self.search_input.fill(text)
@@ -69,13 +89,4 @@ class HomePage(BasePage):
                 checkbox.uncheck()
 
     def sort_by(self, option: str) -> None:
-        first_card = self.product_cards.first
-
-        old_text = first_card.text_content()
-
-        if old_text is None:
-            raise ValueError("Card text not found")
-
         self.sort_dropdown.select_option(label=option)
-
-        expect(first_card).not_to_have_text(old_text)

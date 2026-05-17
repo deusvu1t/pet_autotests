@@ -61,6 +61,11 @@ class RegisterPage(BasePage):
     def error_for(self, field: str) -> Locator:
         return self.page.get_by_test_id(f"{field}-error")
 
+    def country_options(self) -> list[str]:
+        options = self.country_dropdown.locator("option")
+        options.nth(1).wait_for(state="attached")
+        return [o.strip() for o in options.all_text_contents()]
+
     def register(self, data: dict) -> None:
         self.first_name_input.fill(data["first_name"])
         self.last_name_input.fill(data["last_name"])
