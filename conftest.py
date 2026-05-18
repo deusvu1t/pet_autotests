@@ -1,3 +1,5 @@
+import os
+
 import pytest
 from playwright.sync_api import expect
 
@@ -26,12 +28,16 @@ def browser_context_args(browser_context_args):
 
 
 @pytest.fixture(scope="session")
-def browser_type_launch_args():
-    return {
-        "channel": "chrome",
+def browser_type_launch_args(browser_type_launch_args):
+    args = {
+        **browser_type_launch_args,
         "args": [
+            *browser_type_launch_args.get("args", []),
             "--disable-blink-features=AutomationControlled",
             "--no-sandbox",
             "--disable-dev-shm-usage",
         ],
     }
+    if os.getenv("CI"):
+        args["channel"] = "chrome"
+    return args
